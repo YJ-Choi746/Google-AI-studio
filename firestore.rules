@@ -1,0 +1,61 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == "yeonj445@gmail.com" ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidApplication(data) {
+      return data.keys().hasAll(['appId', 'name', 'email', 'phone', 'ageOver14', 'consent', 'appliedAt', 'source', 'version', 'questionStatus']) &&
+        data.appId is string && data.appId.size() <= 64 &&
+        data.name is string && data.name.size() > 0 && data.name.size() <= 40 &&
+        data.email is string && data.email.size() >= 3 && data.email.size() <= 100 &&
+        data.phone is string && data.phone.size() >= 10 && data.phone.size() <= 11 &&
+        data.ageOver14 == true &&
+        data.consent == true &&
+        data.source in ['form', 'admin'] &&
+        data.questionStatus in ['none', 'open', 'answered'] &&
+        data.version is number &&
+        (!('org' in data) || (data.org is string && data.org.size() <= 40)) &&
+        (!('message' in data) || (data.message is string && data.message.size() <= 500)) &&
+        (!('adminMemo' in data) || (data.adminMemo is string && data.adminMemo.size() <= 200));
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    match /admins/{adminId} {
+      allow read: if isSignedIn() && (request.auth.uid == adminId || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    match /applications/{applicationId} {
+      allow get, list: if isAdmin();
+      allow create: if isValidId(applicationId) && isValidApplication(request.resource.data);
+      allow update: if isValidId(applicationId) && isAdmin() && isValidApplication(request.resource.data);
+      allow delete: if isValidId(applicationId) && isAdmin();
+    }
+
+    match /logs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isValidId(logId) && isAdmin();
+      allow update, delete: if false;
+    }
+
+    match /settings/{settingId} {
+      allow read, write: if isValidId(settingId) && (isAdmin() || request.auth.token.email == "yeonj445@gmail.com");
+    }
+  }
+}

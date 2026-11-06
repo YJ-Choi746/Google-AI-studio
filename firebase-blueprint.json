@@ -1,0 +1,226 @@
+{
+  "entities": {
+    "Application": {
+      "title": "Application",
+      "description": "Event preorder application submitted by a participant or created by admin",
+      "type": "object",
+      "properties": {
+        "appId": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "Unique identifier of the application"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "Applicant full name"
+        },
+        "org": {
+          "type": "string",
+          "maxLength": 40,
+          "description": "Applicant organization or company"
+        },
+        "email": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 100,
+          "description": "Applicant email address"
+        },
+        "phone": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 11,
+          "description": "Applicant mobile phone number (digits only)"
+        },
+        "message": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Applicant questions or requests"
+        },
+        "ageOver14": {
+          "type": "boolean",
+          "description": "Confirmation of age 14 or older"
+        },
+        "smsOptIn": {
+          "type": "boolean",
+          "description": "Consent to receive SMS notifications"
+        },
+        "phoneVerified": {
+          "type": "boolean",
+          "description": "Whether phone was verified"
+        },
+        "consent": {
+          "type": "boolean",
+          "description": "Privacy policy agreement"
+        },
+        "consentAt": {
+          "type": "string",
+          "description": "Timestamp of privacy agreement"
+        },
+        "consentVersion": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Version string of consent document"
+        },
+        "appliedAt": {
+          "type": "string",
+          "description": "Timestamp when application was submitted"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when application was last updated"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["form", "admin"],
+          "description": "Registration channel"
+        },
+        "version": {
+          "type": "number",
+          "description": "Record version counter"
+        },
+        "questionStatus": {
+          "type": "string",
+          "enum": ["none", "open", "answered"],
+          "description": "Status of question resolution"
+        },
+        "adminMemo": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Private administrative memo"
+        },
+        "history": {
+          "type": "array",
+          "description": "Array of modification history records"
+        }
+      },
+      "required": [
+        "appId",
+        "name",
+        "email",
+        "phone",
+        "ageOver14",
+        "consent",
+        "appliedAt",
+        "source",
+        "version",
+        "questionStatus"
+      ]
+    },
+    "Log": {
+      "title": "Log",
+      "description": "Audit activity log for administrative actions",
+      "type": "object",
+      "properties": {
+        "at": {
+          "type": "string",
+          "description": "Timestamp of the activity"
+        },
+        "action": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Type of action performed"
+        },
+        "id": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "Target application ID"
+        },
+        "who": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Actor who initiated the change"
+        },
+        "detail": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Additional context or reason"
+        }
+      },
+      "required": [
+        "at",
+        "action",
+        "id",
+        "who"
+      ]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "Admin identity and permissions",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Admin email address"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["admin", "superadmin"],
+          "description": "Assigned administrative role"
+        }
+      },
+      "required": [
+        "email",
+        "role"
+      ]
+    },
+    "Setting": {
+      "title": "Setting",
+      "description": "App settings including Google Sheets integration config",
+      "type": "object",
+      "properties": {
+        "spreadsheetId": {
+          "type": "string",
+          "description": "Connected Google Spreadsheet ID"
+        },
+        "spreadsheetUrl": {
+          "type": "string",
+          "description": "Connected Google Spreadsheet URL"
+        },
+        "sheetName": {
+          "type": "string",
+          "description": "Worksheet tab name"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp"
+        },
+        "lastSyncedAt": {
+          "type": "string",
+          "description": "Last synchronization timestamp"
+        },
+        "syncedCount": {
+          "type": "number",
+          "description": "Count of synchronized rows"
+        }
+      }
+    }
+  },
+  "firestore": {
+    "/applications/{applicationId}": {
+      "schema": {
+        "$ref": "#/entities/Application"
+      },
+      "description": "Event preorder applications collection"
+    },
+    "/logs/{logId}": {
+      "schema": {
+        "$ref": "#/entities/Log"
+      },
+      "description": "Audit logs collection"
+    },
+    "/admins/{adminId}": {
+      "schema": {
+        "$ref": "#/entities/Admin"
+      },
+      "description": "Administrative users collection"
+    },
+    "/settings/{settingId}": {
+      "schema": {
+        "$ref": "#/entities/Setting"
+      },
+      "description": "Application settings collection"
+    }
+  }
+}

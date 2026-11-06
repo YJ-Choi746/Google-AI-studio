@@ -1,0 +1,8 @@
+{
+  "name": "셀렉트마켓 연말 이벤트 사전 신청",
+  "description": "셀렉트마켓 연말 이벤트 사전 신청 및 관리자 페이지",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

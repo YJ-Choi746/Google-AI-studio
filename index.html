@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>셀렉트마켓 연말 이벤트 사전 신청</title>
+<meta name="description" content="셀렉트마켓 연말 이벤트 사전 신청 및 관리자 페이지">
+<meta property="og:title" content="셀렉트마켓 연말 이벤트 사전 신청">
+<meta property="og:description" content="셀렉트마켓 연말 이벤트 사전 신청 및 관리자 페이지">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1F6; --surface:#FFFFFF; --field:#F6F7FA; --ink:#17203B; --muted:#596179;
+  --line:#D6DBE6; --accent:#B3123A; --accent-ink:#FFFFFF; --pine:#1C5A46; --gold:#C9973A;
+  --err:#B42318; --err-bg:#FDECEA; --ok-bg:#E6F2EC; --shade:rgba(15,19,32,.45);
+  --serif:"Gowun Batang","Noto Serif KR","Batang",serif;
+  --sans:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1320; --surface:#171C2C; --field:#1E2436; --ink:#ECEFF6; --muted:#A2A9BF;
+    --line:#2B3247; --accent:#F04A6E; --accent-ink:#22070F; --pine:#5CC29C; --gold:#E3B65E;
+    --err:#FF8A7A; --err-bg:#3A1A1A; --ok-bg:#16302A; --shade:rgba(0,0,0,.6); color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1320; --surface:#171C2C; --field:#1E2436; --ink:#ECEFF6; --muted:#A2A9BF;
+  --line:#2B3247; --accent:#F04A6E; --accent-ink:#22070F; --pine:#5CC29C; --gold:#E3B65E;
+  --err:#FF8A7A; --err-bg:#3A1A1A; --ok-bg:#16302A; --shade:rgba(0,0,0,.6); color-scheme:dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:560px;margin:0 auto;padding:24px 20px 64px}
+.wrap.wide{max-width:1080px}
+.tabs{display:inline-flex;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;margin:0 0 28px}
+.tabs a{padding:7px 18px;border-radius:999px;color:var(--muted);text-decoration:none;font-weight:600;font-size:.95rem}
+.tabs a[aria-selected="true"]{background:var(--ink);color:var(--surface)}
+.tabs a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.brand{font-family:var(--serif);font-weight:700;font-size:1rem;color:var(--accent);margin:0 0 20px}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(2.1rem,8vw,2.9rem);line-height:1.22;letter-spacing:-0.01em;margin:0 0 16px}
+.lede{color:var(--muted);margin:0 0 6px;max-width:34em}
+.dday{margin:0;font-weight:600;color:var(--pine)}
+.string{display:block;width:100%;height:56px;margin-top:20px}
+.tag{position:relative;background:var(--surface);
+  clip-path:polygon(28px 0,calc(100% - 28px) 0,100% 28px,100% 100%,0 100%,0 28px);
+  padding:52px 28px 32px;margin-top:-6px}
+.tag::before{content:"";position:absolute;top:18px;left:50%;width:18px;height:18px;margin-left:-9px;border-radius:50%;
+  background:var(--bg);box-shadow:inset 0 0 0 3px var(--gold)}
+.band{position:absolute;left:0;right:0;bottom:0;height:10px;
+  background:repeating-linear-gradient(135deg,var(--accent) 0 12px,var(--surface) 12px 18px,var(--pine) 18px 30px,var(--surface) 30px 36px)}
+.field{margin:0 0 24px;border:0;padding:0;min-width:0}
+label.lbl{display:block;font-weight:600;margin:0 0 8px;padding:0}
+.hint{display:block;font-size:.875rem;color:var(--muted);margin-top:6px}
+input[type=text],input[type=tel],input[type=email],input[type=search],input[type=password],textarea{width:100%;font:inherit;color:var(--ink);background:var(--field);border:1.5px solid var(--line);border-radius:10px;padding:12px 14px}
+textarea{min-height:128px;resize:vertical;line-height:1.6}
+input:focus,textarea:focus{outline:none;border-color:var(--ink)}
+.invalid input[type=password],.invalid input[type=text],.invalid input[type=tel],.invalid input[type=email],.invalid textarea{border-color:var(--err)}
+.opt{font-weight:400;color:var(--muted);font-size:.875rem;margin-left:6px}
+.req{font-weight:400;color:var(--accent);font-size:.875rem;margin-left:6px}
+.count{float:right;font-size:.8rem;color:var(--muted);margin-top:6px}
+.cut,.ok{display:block;font-size:.875rem;color:var(--pine);margin-top:6px;font-weight:500}
+.err{display:none;font-size:.875rem;color:var(--err);margin-top:6px;font-weight:500}
+.invalid .err{display:block}
+.box{background:var(--field);border-radius:12px;padding:16px}
+.check{display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-weight:500}
+.check input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--accent);flex:none}
+.sms{margin-top:14px;font-weight:400}
+.verify{padding:14px;border:1.5px dashed var(--line);border-radius:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row input{flex:1 1 140px;width:auto}
+.demo{font-size:.85rem;color:var(--muted);margin:8px 0 0}
+.linkbtn{font:inherit;font-size:.9rem;background:none;border:0;padding:0;margin-top:10px;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.u14{margin:10px 0 0;padding:12px 14px;border-radius:10px;background:var(--surface);font-size:.9rem}
+details{margin-top:12px;font-size:.9rem;color:var(--muted)}
+summary{cursor:pointer;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.notice{width:100%;border-collapse:collapse;margin-top:10px}
+.notice th,.notice td{text-align:left;vertical-align:top;padding:8px 0;border-top:1px solid var(--line)}
+.notice th{width:6.5em;font-weight:600;color:var(--ink);padding-right:12px}
+.btn{display:block;width:100%;font:inherit;font-weight:600;font-size:1.05rem;border:0;border-radius:12px;padding:15px;cursor:pointer;background:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.inline{display:inline-block;width:auto;padding:10px 20px;font-size:1rem}
+.btn:focus-visible,.ghost:focus-visible,summary:focus-visible,.linkbtn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.ghost{font:inherit;font-weight:600;background:var(--surface);border:1.5px solid var(--line);color:var(--ink);border-radius:10px;padding:8px 14px;cursor:pointer}
+.ghost:disabled{opacity:.55;cursor:not-allowed}
+.ghost.sm{padding:5px 11px;font-size:.85rem}
+.ghost.danger{color:var(--err)}
+.formmsg{display:none;margin:14px 0 0;padding:12px 14px;border-radius:10px;background:var(--err-bg);color:var(--err);font-weight:500}
+.formmsg.show{display:block}
+.state h2{font-family:var(--serif);font-size:1.7rem;line-height:1.3;margin:0 0 10px}
+.state p{margin:0 0 12px;color:var(--muted)}
+.receipt{width:100%;border-collapse:collapse;margin:16px 0 20px}
+.receipt th,.receipt td{text-align:left;padding:10px 0;border-top:1px solid var(--line);vertical-align:top;word-break:break-word}
+.receipt th{width:7em;font-weight:500;color:var(--muted)}
+.panel{background:var(--surface);border-radius:16px;padding:24px 28px;margin-top:20px}
+.panel h2{font-family:var(--serif);font-size:1.3rem;margin:0 0 12px}
+.sub{color:var(--muted);font-size:.9rem}
+.sub.warn{color:var(--err);font-weight:500}
+/* 관리자 */
+.admin-head{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:8px}
+.admin-head h1{font-size:clamp(1.8rem,5vw,2.3rem);margin:0}
+.stats{display:flex;gap:24px;flex-wrap:wrap;margin:20px 0}
+.stat b{display:block;font-family:var(--serif);font-size:1.8rem;line-height:1.2}
+.stat span{font-size:.85rem;color:var(--muted)}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.toolbar input{flex:1 1 220px;width:auto;padding:9px 12px}
+.scroll{overflow-x:auto}
+.roster{border-collapse:collapse;width:100%;font-size:.9rem}
+.roster th,.roster td{text-align:left;padding:12px 14px 12px 0;border-top:1px solid var(--line);vertical-align:top}
+.roster th{color:var(--muted);font-weight:500;white-space:nowrap}
+.roster td{white-space:nowrap}
+.roster td.q{white-space:normal;min-width:14em;max-width:22em;word-break:break-word}
+.roster td.act{text-align:right}
+.roster td.act .ghost + .ghost{margin-left:6px}
+.pill{display:inline-block;font-size:.78rem;padding:1px 8px;border-radius:999px;background:var(--ok-bg);color:var(--pine);font-weight:600}
+.pill.off{background:var(--field);color:var(--muted)}
+.pill.warn{background:var(--err-bg);color:var(--err)}
+.edited{display:block;font-size:.78rem;color:var(--muted)}
+.empty{padding:32px 0;text-align:center;color:var(--muted)}
+dialog{border:0;border-radius:16px;padding:0;width:min(520px,calc(100vw - 32px));max-height:calc(100vh - 48px);background:var(--surface);color:var(--ink)}
+dialog::backdrop{background:var(--shade)}
+.dlg{padding:24px 24px 20px}
+.dlg h2{font-family:var(--serif);font-size:1.4rem;margin:0 0 4px}
+.dlg .meta{font-size:.85rem;color:var(--muted);margin:0 0 20px}
+.dlg .field{margin-bottom:18px}
+.dlg-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+select{font:inherit;color:var(--ink);background:var(--field);border:1.5px solid var(--line);border-radius:10px;padding:9px 12px}
+.dlg select{width:100%;padding:12px 14px}
+.roster th.ck,.roster td.ck{width:28px;padding-right:8px}
+.roster input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent);margin:0}
+.sortbtn{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;font-weight:500}
+.sortbtn[data-dir="asc"]::after{content:" ↑"}
+.sortbtn[data-dir="desc"]::after{content:" ↓"}
+.roster td.qcell{white-space:normal;min-width:12em;max-width:18em}
+.qtext{display:block;font-size:.82rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:18em}
+.pill.info{background:var(--field);color:var(--ink)}
+.pager{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap}
+.logpanel summary{font-family:var(--serif);font-size:1.15rem;text-decoration:none;color:var(--ink)}
+.logpanel[open] summary{margin-bottom:8px}
+.h3{font-size:1rem;margin:4px 0 8px}
+.history{margin:0 0 16px;padding-left:1.2em;font-size:.88rem;color:var(--muted)}
+.history li{margin-bottom:6px}
+.history b{color:var(--ink);font-weight:600}
+.toast-wrap{position:fixed;left:0;right:0;bottom:0;padding:0 16px calc(16px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;pointer-events:none;z-index:20}
+.toast{pointer-events:auto;display:flex;gap:12px;align-items:center;background:var(--ink);color:var(--surface);border-radius:12px;padding:10px 12px 10px 16px;box-shadow:0 8px 24px rgba(0,0,0,.2);font-size:.92rem}
+.toast .ghost{background:transparent;color:var(--surface);border-color:rgba(255,255,255,.4)}
+.lock{max-width:420px;margin:24px auto 0;background:var(--surface);border-radius:16px;padding:32px 28px}
+.lock h1{font-size:clamp(1.8rem,6vw,2.2rem);margin:0 0 8px}
+.lock .sub{margin:0 0 24px}
+.warnbox{font-size:.9rem;line-height:1.6;margin-bottom:16px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+[hidden]{display:none !important}
+@media (max-width:420px){.tag{padding:48px 20px 28px}.panel{padding:20px}}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+<main class="wrap" id="wrap">
+  <nav class="tabs" role="tablist" aria-label="화면 선택">
+    <a href="#apply" role="tab" id="tab-apply" aria-controls="view-apply">사전 신청</a>
+    <a href="#admin" role="tab" id="tab-admin" aria-controls="view-admin">관리자</a>
+  </nav>
+
+  <!-- 사전 신청 -->
+  <div id="view-apply" role="tabpanel" aria-labelledby="tab-apply">
+    <header>
+      <p class="brand">셀렉트마켓</p>
+      <h1>올해 주고 싶은 선물,<br>먼저 골라 두세요</h1>
+      <p class="lede">연말 이벤트 사전 신청은 12월 15일 밤 11시 59분에 마감돼요. 미리 신청해 두시면 이벤트 소식을 가장 먼저 보내 드려요.</p>
+      <p class="dday" id="dday"></p>
+    </header>
+
+    <svg class="string" viewBox="0 0 520 56" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M260 56 C 255 30, 210 18, 170 10 M260 56 C 266 30, 312 16, 350 6" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+
+    <section class="tag">
+      <form id="form" novalidate>
+        <div class="field" id="f-name">
+          <label class="lbl" for="name">이름<span class="req">필수</span></label>
+          <input type="text" id="name" autocomplete="name">
+          <span class="hint">한글, 영문, 공백으로 40자까지 입력할 수 있어요. 외국 이름의 ’ - . 와 악센트 문자도 쓸 수 있어요.</span>
+          <span class="cut" id="name-cut" hidden>이름은 40자까지만 입력돼요. 더 긴 이름은 담당자 이메일([담당자 이메일])로 문의해 주세요.</span>
+          <span class="err" id="name-err"></span>
+        </div>
+
+        <div class="field" id="f-org">
+          <label class="lbl" for="org">소속<span class="opt">선택</span></label>
+          <input type="text" id="org" maxlength="40" autocomplete="organization">
+          <span class="hint">한글, 영문, 숫자, 공백과 ( ) &amp; - 를 쓸 수 있어요.</span>
+          <span class="err" id="org-err"></span>
+        </div>
+
+        <div class="field" id="f-email">
+          <label class="lbl" for="email">이메일<span class="req">필수</span></label>
+          <input type="email" id="email" maxlength="100" placeholder="name@example.com" autocomplete="email" inputmode="email">
+          <span class="err" id="email-err"></span>
+        </div>
+
+        <div class="field" id="f-phone">
+          <label class="lbl" for="phone">휴대폰<span class="req">필수</span></label>
+          <input type="tel" id="phone" inputmode="numeric" maxlength="11" placeholder="01012345678" autocomplete="tel">
+          <span class="hint">공백이나 하이픈 없이 숫자 11자리로 입력해 주세요.</span>
+          <span class="err" id="phone-err"></span>
+          <label class="check sms"><input type="checkbox" id="sms"><span>이벤트 안내를 문자로도 받을게요. (선택, 휴대폰 인증 필요)</span></label>
+        </div>
+
+        <div class="field verify" id="f-verify" hidden>
+          <div class="row">
+            <button class="ghost" type="button" id="send-code">인증번호 받기</button>
+            <input type="text" id="code" inputmode="numeric" maxlength="6" placeholder="인증번호 6자리" aria-label="인증번호">
+            <button class="ghost" type="button" id="check-code">확인</button>
+          </div>
+          <p class="demo" id="demo-code" hidden></p>
+          <span class="ok" id="verify-ok" hidden>휴대폰 인증을 마쳤어요.</span>
+          <span class="err" id="verify-err"></span>
+        </div>
+
+        <div class="field" id="f-msg">
+          <label class="lbl" for="msg">하고 싶은 질문이나 요청<span class="opt">선택</span></label>
+          <textarea id="msg" maxlength="500"></textarea>
+          <span class="count" id="msg-count">0 / 500</span>
+          <span class="hint">주민등록번호, 계좌번호 같은 민감한 개인정보는 적지 마세요.</span>
+        </div>
+
+        <div class="field" id="f-consent">
+          <div class="box">
+            <label class="check"><input type="checkbox" id="consent"><span>[필수] 개인정보 수집·이용에 동의합니다.</span></label>
+            <details>
+              <summary>수집·이용 내용 보기</summary>
+              <table class="notice">
+                <tr><th>수집 항목</th><td>(필수) 이름, 이메일, 휴대폰 번호, 만 14세 이상 여부 (선택) 소속, 질문·요청 내용, 문자 수신 여부</td></tr>
+                <tr><th>이용 목적</th><td>연말 이벤트 사전 신청 접수, 중복 신청 확인, 이벤트 안내, 질문·요청 답변</td></tr>
+                <tr><th>보유 기간</th><td>이벤트 종료(2026년 12월 15일) 후 3개월, 2027년 3월 15일까지 보관한 뒤 파기합니다. 취소를 요청하면 즉시 삭제합니다.</td></tr>
+                <tr><th>거부 권리</th><td>동의를 거부할 수 있으며, 거부하면 사전 신청을 할 수 없습니다.</td></tr>
+              </table>
+            </details>
+          </div>
+          <span class="err">개인정보 수집·이용에 동의해야 신청할 수 있어요.</span>
+        </div>
+
+        <div class="field" id="f-age">
+          <div class="box">
+            <label class="check"><input type="checkbox" id="age14"><span>[필수] 만 14세 이상입니다.</span></label>
+            <button class="linkbtn" type="button" id="under14-toggle" aria-expanded="false" aria-controls="under14-note">만 14세 미만인가요?</button>
+            <p class="u14" id="under14-note" hidden>이번 사전 신청은 만 14세 이상만 참여할 수 있어요. 만 14세 미만의 개인정보는 법정대리인의 동의 없이 받을 수 없어서, 만 14세 미만은 신청을 받지 않아요.</p>
+          </div>
+          <span class="err">만 14세 이상만 신청할 수 있어요. 만 14세 이상이라면 체크해 주세요.</span>
+        </div>
+
+        <button class="btn" id="submit" type="submit">사전 신청하기</button>
+        <p class="formmsg" id="formmsg" role="alert"></p>
+      </form>
+
+      <div class="state" id="done" hidden>
+        <h2>사전 신청 완료</h2>
+        <p>이벤트가 열리면 입력한 이메일로 안내해 드릴게요. 문자 수신을 선택했다면 휴대폰으로도 보내 드려요.</p>
+        <table class="receipt" id="receipt"></table>
+        <p class="sub">신청을 취소하려면 담당자 이메일([담당자 이메일])로 요청해 주세요.</p>
+        <button class="ghost" id="again" type="button">다른 정보로 신청하기</button>
+      </div>
+
+      <div class="state" id="closed" hidden>
+        <h2>사전 신청이 마감되었어요</h2>
+        <p>사전 신청은 2026년 12월 15일 밤 11시 59분에 마감되었어요. 이벤트 소식은 셀렉트마켓 앱과 홈페이지에서 확인해 주세요.</p>
+      </div>
+      <div class="band" aria-hidden="true"></div>
+    </section>
+
+  </div>
+
+  <!-- 관리자 -->
+  <div id="view-admin" role="tabpanel" aria-labelledby="tab-admin" hidden>
+    <section class="lock" id="admin-lock">
+      <p class="brand">셀렉트마켓 연말 이벤트</p>
+      <h1>관리자 확인</h1>
+      <p class="sub">신청자 관리 화면은 주최자 Google 로그인 또는 관리자 비밀번호를 입력해야 열려요.</p>
+      <div style="margin-bottom: 20px;">
+        <button class="btn" type="button" id="google-login-btn" style="background:#4285F4;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;">
+          <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#fff" d="M21.35 11.1H12v2.96h5.36c-.23 1.25-.94 2.31-2 3.02v2.51h3.24c1.9-1.75 2.99-4.32 2.99-7.39 0-.71-.06-1.4-.24-2z"/><path fill="#fff" d="M12 21c2.7 0 4.96-.9 6.62-2.41l-3.24-2.51c-.9.6-2.05.95-3.38.95-2.6 0-4.8-1.76-5.59-4.12H3.06v2.58C4.72 18.77 8.08 21 12 21z"/><path fill="#fff" d="M6.41 12.91c-.2-.6-.31-1.24-.31-1.91s.11-1.31.31-1.91V6.51H3.06C2.39 7.84 2 9.38 2 11s.39 3.16 1.06 4.49l3.35-2.58z"/><path fill="#fff" d="M12 5.38c1.47 0 2.79.51 3.83 1.5l2.87-2.87C16.96 2.41 14.7 1.5 12 1.5 8.08 1.5 4.72 3.73 3.06 7.02l3.35 2.58c.79-2.36 2.99-4.22 5.59-4.22z"/></svg>
+          Google 계정으로 주최자 로그인
+        </button>
+        <p class="err" id="google-login-err" style="display:none;margin-top:10px;line-height:1.5;white-space:pre-line;font-size:0.85rem;padding:10px;background:var(--err-bg);border-radius:8px;"></p>
+        <div id="iframe-login-hint" style="margin-top:12px;padding:10px 12px;background:var(--field);border:1px dashed var(--line);border-radius:8px;font-size:0.82rem;color:var(--muted);line-height:1.5;">
+          💡 브라우저 팝업/쿠키 차단으로 로그인이 안 될 경우, <a href="#" class="open-tab-btn" target="_blank" rel="noopener noreferrer" style="color:var(--accent);font-weight:600;text-decoration:underline;">새 탭에서 직접 열기 ↗</a>를 통해 접속해 보세요.
+        </div>
+      </div>
+      <form id="lock-form" novalidate>
+        <div class="field" id="f-pw">
+          <label class="lbl" for="pw">비밀번호로 로그인</label>
+          <input type="password" id="pw" autocomplete="current-password">
+          <span class="err" id="pw-err"></span>
+        </div>
+        <button class="btn" type="submit" id="pw-btn">입장</button>
+      </form>
+    </section>
+    <div id="admin-content" hidden>
+    <div class="admin-head">
+      <div>
+        <p class="brand">셀렉트마켓 연말 이벤트</p>
+        <h1>신청자 관리</h1>
+        <div id="admin-user-info" style="font-size: 0.85rem; color: var(--pine); margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#10B981;"></span>
+          <span id="admin-sync-status">Firestore 실시간 연동 준비 완료</span>
+          <span id="admin-email-badge" style="color:var(--muted)"></span>
+        </div>
+      </div>
+      <div class="row">
+        <button class="ghost" type="button" id="lock-btn">로그아웃/잠그기</button>
+        <button class="ghost" type="button" id="export-btn">CSV 전체 다운로드</button>
+        <button class="btn inline" type="button" id="add-btn">신청자 추가</button>
+      </div>
+    </div>
+    <p class="sub">Firebase Firestore 데이터베이스와 실시간으로 연동되어 새 신청이 들어오면 화면 새로고침 없이 즉시 표시됩니다.</p>
+
+    <!-- 구글 스프레드시트 실시간 연동 카드 -->
+    <div class="box" id="sheets-card" style="margin: 16px 0; border: 1.5px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; background: var(--surface);">
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <div style="width: 42px; height: 42px; border-radius: 10px; background: #E6F4EA; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M19 3H5C3.89 3 3 3.89 3 5V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.89 20.1 3 19 3ZM19 19H5V5H19V19ZM17 14H14V17H12V14H9V12H12V9H14V12H17V14Z" fill="#137333"/></svg>
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <strong style="font-size: 0.98rem; color: var(--ink);">Google 스프레드시트 실시간 누적</strong>
+            <span class="pill off" id="sheet-status-badge">미연동</span>
+          </div>
+          <p class="hint" id="sheet-desc" style="margin: 2px 0 0;">신청 즉시 구글 스프레드시트에 행으로 실시간 자동 누적됩니다.</p>
+        </div>
+      </div>
+      <div class="row" style="gap: 8px;">
+        <a class="ghost sm" id="sheet-open-link" href="#" target="_blank" rel="noopener noreferrer" style="display: none; align-items: center; gap: 4px; text-decoration: none;">
+          <span>시트 열기 ↗</span>
+        </a>
+        <button class="ghost sm" type="button" id="sheet-sync-all-btn" style="display: none;">전체 시트 동기화</button>
+        <button class="btn inline" type="button" id="sheet-connect-btn" style="font-size: 0.85rem; padding: 7px 14px; width: auto;">구글 시트 연동 / 새 시트 생성</button>
+      </div>
+      <div id="sheet-err-box" style="display:none;width:100%;padding:10px 12px;background:var(--err-bg);border-radius:8px;font-size:0.85rem;color:var(--err);line-height:1.5;white-space:pre-line;margin-top:8px;"></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b id="st-total">0</b><span>전체 신청</span></div>
+      <div class="stat"><b id="st-sms">0</b><span>문자 수신</span></div>
+      <div class="stat"><b id="st-open">0</b><span>미답변 질문</span></div>
+      <div class="stat"><b id="st-admin">0</b><span>관리자 등록</span></div>
+    </div>
+
+    <section class="panel" style="margin-top:0">
+      <div class="toolbar">
+        <label class="sr" for="search">신청자 검색</label>
+        <input type="search" id="search" placeholder="이름, 소속, 이메일, 휴대폰, 신청 번호로 검색">
+        <label class="sr" for="filter">필터</label>
+        <select id="filter">
+          <option value="all">전체</option>
+          <option value="sms">문자 수신</option>
+          <option value="open">미답변 질문</option>
+          <option value="answered">답변 완료 질문</option>
+          <option value="admin">관리자 등록</option>
+        </select>
+        <button class="ghost sm danger" type="button" id="bulk-del" disabled>선택 삭제</button>
+      </div>
+      <div class="scroll" id="roster-wrap">
+        <table class="roster">
+          <thead><tr>
+            <th class="ck"><input type="checkbox" id="check-page" aria-label="이 페이지 전체 선택"></th>
+            <th><button class="sortbtn" type="button" data-sort="appliedAt">신청 일시</button></th>
+            <th><button class="sortbtn" type="button" data-sort="name">이름</button></th>
+            <th>소속</th><th>이메일</th><th>휴대폰</th><th>문자</th>
+            <th><button class="sortbtn" type="button" data-sort="questionStatus">질문</button></th>
+            <th>등록</th><th><span class="sr">관리</span></th>
+          </tr></thead>
+          <tbody id="roster-body"></tbody>
+        </table>
+      </div>
+      <p class="empty" id="roster-empty" hidden></p>
+      <div class="pager" id="pager">
+        <span class="sub" id="page-info"></span>
+        <div class="row">
+          <button class="ghost sm" type="button" id="prev-page">이전</button>
+          <button class="ghost sm" type="button" id="next-page">다음</button>
+        </div>
+      </div>
+    </section>
+
+    <details class="panel logpanel" id="log-panel">
+      <summary>활동 기록</summary>
+      <p class="sub">등록, 수정, 삭제가 언제 일어났는지 남겨요. 개인정보는 가린 형태로만 기록해요.</p>
+      <div class="scroll">
+        <table class="roster">
+          <thead><tr><th>시각</th><th>작업</th><th>신청 번호</th><th>대상</th><th>내용</th></tr></thead>
+          <tbody id="log-body"></tbody>
+        </table>
+      </div>
+      <p class="empty" id="log-empty" hidden>아직 기록이 없어요.</p>
+    </details>
+    </div>
+  </div>
+
+  <!-- 상세 보기 -->
+  <dialog id="detail-dialog" aria-labelledby="detail-title">
+    <div class="dlg">
+      <h2 id="detail-title">신청 상세</h2>
+      <table class="receipt" id="detail-body"></table>
+      <h3 class="h3">변경 이력</h3>
+      <ol class="history" id="detail-history"></ol>
+      <div class="dlg-actions">
+        <button class="ghost danger" type="button" id="detail-del">삭제</button>
+        <button class="ghost" type="button" id="detail-edit">수정</button>
+        <button class="btn inline" type="button" id="detail-close">닫기</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 등록·수정 -->
+  <dialog id="edit-dialog" aria-labelledby="edit-title">
+    <form class="dlg" id="edit-form" novalidate>
+      <h2 id="edit-title">신청 정보 수정</h2>
+      <p class="meta" id="edit-meta"></p>
+
+      <div class="field" id="ef-name">
+        <label class="lbl" for="e-name">이름<span class="req">필수</span></label>
+        <input type="text" id="e-name">
+        <span class="err" id="ee-name"></span>
+      </div>
+      <div class="field" id="ef-org">
+        <label class="lbl" for="e-org">소속<span class="opt">선택</span></label>
+        <input type="text" id="e-org" maxlength="40">
+        <span class="err" id="ee-org"></span>
+      </div>
+      <div class="field" id="ef-email">
+        <label class="lbl" for="e-email">이메일<span class="req">필수</span></label>
+        <input type="email" id="e-email" maxlength="100">
+        <span class="err" id="ee-email"></span>
+      </div>
+      <div class="field" id="ef-phone">
+        <label class="lbl" for="e-phone">휴대폰<span class="req">필수</span></label>
+        <input type="tel" id="e-phone" inputmode="numeric" maxlength="11" placeholder="01012345678">
+        <span class="hint" id="e-phone-hint">번호를 바꾸면 문자 수신 인증이 해제돼요.</span>
+        <span class="err" id="ee-phone"></span>
+      </div>
+      <div class="field">
+        <label class="check"><input type="checkbox" id="e-sms"><span>문자 수신</span></label>
+      </div>
+      <div class="field">
+        <label class="lbl" for="e-msg">질문·요청<span class="opt">선택</span></label>
+        <textarea id="e-msg" maxlength="500" style="min-height:88px"></textarea>
+      </div>
+      <div class="field">
+        <label class="lbl" for="e-status">질문 처리 상태</label>
+        <select id="e-status">
+          <option value="none">질문 없음</option>
+          <option value="open">미답변</option>
+          <option value="answered">답변 완료</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="lbl" for="e-memo">관리자 메모<span class="opt">선택, 관리자만 볼 수 있어요</span></label>
+        <textarea id="e-memo" maxlength="200" style="min-height:72px"></textarea>
+        <span class="hint">처리 내용만 적고, 개인정보는 적지 마세요.</span>
+      </div>
+      <div class="field" id="ef-consent" hidden>
+        <div class="box"><label class="check"><input type="checkbox" id="e-consent"><span>신청자에게 개인정보 수집·이용 동의와 만 14세 이상 여부를 확인했습니다.</span></label></div>
+        <span class="err">대리 등록하려면 신청자의 동의와 만 14세 이상 여부를 먼저 확인해야 해요.</span>
+      </div>
+      <p class="formmsg" id="edit-msg" role="alert"></p>
+      <div class="dlg-actions">
+        <button class="ghost" type="button" id="edit-cancel">닫기</button>
+        <button class="btn inline" type="submit" id="edit-save">저장</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 삭제 확인 -->
+  <dialog id="del-dialog" aria-labelledby="del-title">
+    <form class="dlg" id="del-form" novalidate>
+      <h2 id="del-title">신청 삭제</h2>
+      <p class="meta" id="del-text"></p>
+      <div class="field">
+        <label class="lbl" for="del-reason">삭제 사유</label>
+        <select id="del-reason">
+          <option>신청자 요청</option>
+          <option>중복·잘못된 입력</option>
+          <option>테스트 데이터</option>
+          <option>보유기간 만료</option>
+          <option>기타</option>
+        </select>
+        <span class="hint">삭제하면 개인정보는 바로 지워지고, 활동 기록에는 사유만 남아요.</span>
+      </div>
+      <div class="dlg-actions">
+        <button class="ghost" type="button" id="del-cancel">닫기</button>
+        <button class="btn inline" type="submit">삭제</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- CSV 내보내기 -->
+  <dialog id="export-dialog" aria-labelledby="export-title">
+    <form class="dlg" id="export-form" novalidate>
+      <h2 id="export-title">CSV 전체 다운로드</h2>
+      <p class="meta" id="export-text"></p>
+      <div class="field">
+        <label class="lbl" for="export-purpose">다운로드 목적</label>
+        <select id="export-purpose">
+          <option>이벤트 안내 발송</option>
+          <option>질문·요청 답변</option>
+          <option>신청 현황 보고</option>
+          <option>기타</option>
+        </select>
+        <span class="hint">목적과 건수는 활동 기록에 남아요.</span>
+      </div>
+      <div class="box warnbox">
+        이 파일에는 가리지 않은 이름, 휴대폰 번호, 이메일이 들어 있어요. 목적에 쓴 뒤에는 바로 지우고, 메신저나 메일로 파일을 그대로 전달하지 마세요. 관리자 메모와 변경 이력은 파일에 넣지 않아요.
+      </div>
+      <p class="formmsg" id="export-msg" role="alert"></p>
+      <div class="dlg-actions">
+        <button class="ghost" type="button" id="export-cancel">닫기</button>
+        <button class="btn inline" type="submit" id="export-go">다운로드</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 구글 시트 일괄 동기화 확인 다이얼로그 (Workspace Skill 준수) -->
+  <dialog id="sheet-sync-dialog" aria-labelledby="sheet-sync-title">
+    <div class="dlg">
+      <h2 id="sheet-sync-title">Google 스프레드시트 전체 동기화</h2>
+      <p class="meta" id="sheet-sync-desc">현재 Firestore에 등록된 전체 신청자 명단을 구글 시트에 갱신합니다.</p>
+      <div class="box warnbox" style="margin-bottom: 16px;">
+        구글 시트의 기존 데이터 행이 현재 신청자 목록으로 최신화됩니다. 계속 진행하시겠습니까?
+      </div>
+      <div class="dlg-actions">
+        <button class="ghost" type="button" id="sheet-sync-cancel">취소</button>
+        <button class="btn inline" type="button" id="sheet-sync-confirm" style="background: #137333;">동기화 진행</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 안내/오류 공통 다이얼로그 (window.alert 대체) -->
+  <dialog id="msg-dialog" aria-labelledby="msg-dlg-title">
+    <div class="dlg">
+      <h2 id="msg-dlg-title">알림</h2>
+      <div id="msg-dlg-body" style="font-size:0.92rem;line-height:1.6;white-space:pre-line;margin:12px 0 20px;color:var(--ink);"></div>
+      <div class="dlg-actions">
+        <button class="btn inline" type="button" id="msg-dlg-close">확인</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast-wrap" aria-live="polite"><div class="toast" id="toast" hidden><span id="toast-text"></span><button class="ghost sm" type="button" id="toast-undo">되돌리기</button></div></div>
+</main>
+
+<script type="module" src="/src/app.ts"></script>
+</body>
+</html>
